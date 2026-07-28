@@ -93,6 +93,42 @@ See CONTRIBUTING.md for full setup details and dependency requirements.
 
 ---
 
+## Steve Pilot Branch Policy
+
+This checkout has two jobs: upstream contribution work and Steve's local Buzz
+pilot. Keep those jobs separated by branch so the local pilot can keep moving
+even when an upstream PR is waiting for review.
+
+Use these branch lanes:
+
+- `main` mirrors `origin/main` from `block/buzz`; do not commit Steve-local
+  pilot work here.
+- `codex/<topic>` is for upstreamable PR branches. Keep these narrow, reviewable,
+  and tied to one upstream contribution.
+- `steve/pilot-main` is Steve's local integration branch. It may carry accepted,
+  pending, or rejected upstreamable patches that make the local pilot smoother.
+- `steve/pilot/<topic>` is for local-only pilot experiments before deciding
+  whether they should become upstream PRs.
+
+When starting future work:
+
+- If it should go to `block/buzz`, branch from updated `main` with
+  `codex/<topic>`, then open a PR from the fork.
+- If it is needed for Steve's active local pilot regardless of upstream review,
+  branch from or merge into `steve/pilot-main`.
+- If a PR branch proves useful locally, cherry-pick it into `steve/pilot-main`
+  instead of continuing unrelated pilot work on the PR branch.
+- If upstream accepts a PR, refresh `main` from `origin/main`, then refresh
+  `steve/pilot-main` and drop the duplicate local patch.
+- If upstream rejects or stalls on a PR, keep the useful patch on
+  `steve/pilot-main` and split future upstreamable pieces into smaller
+  `codex/<topic>` branches.
+
+Before running the active pilot, check that the checkout is on
+`steve/pilot-main` unless Steve explicitly asks to test a PR branch.
+
+---
+
 ## Quality Gates
 
 Run `just ci` before every PR — it runs `fmt` + `clippy` + desktop lint +
